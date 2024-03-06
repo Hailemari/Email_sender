@@ -22,6 +22,7 @@ app.post('/cancel_subscription', async (req, res) => {
         }
 
         const emailContent = getEmailContent(product_name, subscription_id, cancelled_at, created_at);
+        
 
         await sendEmail(user_email, "Subscription Cancellation", emailContent);
         
@@ -49,6 +50,7 @@ function getEmailContent(product_name, subscription_id, cancelled_at, created_at
 async function sendEmail(receiverEmail, subject, message) {
     try {
         let transporter = nodemailer.createTransport({
+            service: 'gmail',
             host: process.env.EMAIL_HOST,
             port: process.env.EMAIL_PORT,
             secure: process.env.EMAIL_SECURE === 'true',
