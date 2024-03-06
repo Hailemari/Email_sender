@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 
 app.post('/cancel_subscription', async (req, res) => {
     console.log('new request');
-    console.log(req.body);
+    console.log(req.params);
     try {
         const { user_email, subscription_id, product_name, cancelled_at, created_at } = req.body;
 
