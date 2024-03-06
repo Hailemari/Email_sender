@@ -17,7 +17,7 @@ app.post('/cancel_subscription', async (req, res) => {
     try {
         const { user_email, subscription_id, product_name, cancelled_at, created_at } = req.query;
 
-        if (!req.body || !user_email || !subscription_id || !product_name || !cancelled_at || !created_at) {
+        if (!user_email || !subscription_id || !product_name || !cancelled_at || !created_at) {
             return res.status(400).json({ error: 'Missing required fields in the request.' });
         }
 
