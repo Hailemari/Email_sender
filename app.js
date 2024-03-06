@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000
 const app = express();
 
 
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 
 app.post('/cancel_subscription', async (req, res) => {
@@ -17,7 +17,7 @@ app.post('/cancel_subscription', async (req, res) => {
     console.log(req.params)
     console.log(req.query)
     try {
-        const { user_email, subscription_id, product_name, cancelled_at, created_at } = req.params;
+        const { user_email, subscription_id, product_name, cancelled_at, created_at } = req.body;
 
         if (!user_email || !subscription_id || !product_name || !cancelled_at || !created_at) {
             return res.status(400).json({ error: 'Missing required fields in the request.' });
