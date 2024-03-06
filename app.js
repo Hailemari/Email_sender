@@ -37,13 +37,15 @@ app.post('/cancel_subscription', async (req, res) => {
 function getEmailContent(product_name, subscription_id, cancelled_at, created_at) {
     const cancellationTime = new Date(cancelled_at);
     const creationTime = new Date(created_at);
-    const daysDifference = Math.floor((cancellationTime - creationTime) / (1000 * 60 * 60 * 24));
+
+    const differenceInMs = cancellationTime.getTime() - creationTime.getTime();
+    const differenceInDays = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
     console.log(cancelled_at.getTime())
     console.log(created_at.getTime())
     console.log(daysDifference)
-    if (daysDifference < 7) {
+    if (differenceInDays < 7) {
         return `Dear Customer,\n\nYour subscription for ${product_name} (Subscription ID: ${subscription_id}) has been cancelled within the first seven days of subscription.\n\nIf you have any questions or concerns, please feel free to contact us.\n\nBest regards,\n`;
-    } else if (daysDifference < 30) {
+    } else if (differenceInDays < 30) {
         return `Dear Customer,\n\nYour subscription for ${product_name} (Subscription ID: ${subscription_id}) has been cancelled between 7 and 30 days of subscription.\n\nIf you have any  questions or concerns, please feel free to contact us.\n\nBest regards,\n`;
     } else {
         return `Dear Customer,\n\nYour subscription for ${product_name} (Subscription ID: ${subscription_id}) has been cancelled after 30 days of subscription.\n\nIf you have any questions or concerns, please feel free to contact us.\n\nBest regards,\n`;
