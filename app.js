@@ -22,7 +22,7 @@ app.post('/cancel_subscription', async (req, res) => {
         }
 
         const emailContent = getEmailContent(product_name, subscription_id, cancelled_at, created_at);
-        
+        console.log(user_email, subscription_id, product_name, cancelled_at, created_at)
 
         await sendEmail(user_email, "Subscription Cancellation", emailContent);
         
