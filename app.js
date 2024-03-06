@@ -8,19 +8,17 @@ const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
-    res.send('HELLO WORLD');
-});
 
 app.post('/cancel_subscription', async (req, res) => {
+    console.log('new request')
     try {
-        const { user_email, subscription_id, product_name, cancelled_at } = req.body;
+        const { user_email, subscription_id, product_name, cancelled_at, created_at } = req.body;
 
-        if (!user_email || !subscription_id || !product_name || !cancelled_at) {
+        if (!user_email || !subscription_id || !product_name || !cancelled_at || !created_at) {
             return res.status(400).json({ error: 'Missing required fields in the request.' });
         }
 
-        const emailContent = getEmailContent(product_name, subscription_id, cancelled_at);
+        const emailContent = getEmailContent(product_name, subscription_id, cancelled_at, created_at);
 
         await sendEmail(user_email, "Subscription Cancellation", emailContent);
         
@@ -31,15 +29,15 @@ app.post('/cancel_subscription', async (req, res) => {
     }
 });
 
-function getEmailContent(product_name, subscription_id, cancelled_at) {
+function getEmailContent(product_name, subscription_id, cancelled_at, created_at) {
     const cancellationTime = new Date(cancelled_at);
-    const currentTime = new Date();
-    const daysDifference = Math.floor((currentTime - cancellationTime) / (1000 * 60 * 60 * 24));
+    const creationTime = new Date(created_at);
+    const daysDifference = Math.ceil((cancellationTime - creationTime) / (1000 * 60 * 60 * 24));
 
     if (daysDifference < 7) {
         return `Dear Customer,\n\nYour subscription for ${product_name} (Subscription ID: ${subscription_id}) has been cancelled within the first seven days of subscription.\n\nIf you have any questions or concerns, please feel free to contact us.\n\nBest regards,\n`;
     } else if (daysDifference < 30) {
-        return `Dear Customer,\n\nYour subscription for ${product_name} (Subscription ID: ${subscription_id}) has been cancelled between 7 and 30 days of subscription.\n\nIf you have any questions or concerns, please feel free to contact us.\n\nBest regards,\n`;
+        return `Dear Customer,\n\nYour subscription for ${product_name} (Subscription ID: ${subscription_id}) has been cancelled between 7 and 30 days of subscription.\n\nIf you have any  questions or concerns, please feel free to contact us.\n\nBest regards,\n`;
     } else {
         return `Dear Customer,\n\nYour subscription for ${product_name} (Subscription ID: ${subscription_id}) has been cancelled after 30 days of subscription.\n\nIf you have any questions or concerns, please feel free to contact us.\n\nBest regards,\n`;
     }
@@ -71,5 +69,5 @@ async function sendEmail(receiverEmail, subject, message) {
 }
 
 app.listen(PORT, () => {
-    console.log(`Server is running on 'http://localhost:${PORT}'`);
+    console.log(`Server is running on port ${PORT}`);
 });
