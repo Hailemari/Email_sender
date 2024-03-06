@@ -66,10 +66,6 @@ async function sendEmail(receiverEmail, subject, message) {
             subject: subject,
             text: message
         };
-        console.log(process.env.EMAIL_HOST,
-            process.env.EMAIL_PORT,
-            process.env.EMAIL_SECURE === 'true',
-            process.env.EMAIL_USER,process.env.EMAIL_PASSWORD);
 
         await transporter.sendMail(mailOptions);
     } catch (error) {
