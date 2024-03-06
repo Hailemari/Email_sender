@@ -16,13 +16,13 @@ app.post('/cancel_subscription', async (req, res) => {
     console.log(req.body)
 
     try {
-        const { user_email, subscription_id, product_name, ended_at, created_at } = req.body;
+        const { user_email, subscription_id, product_name, cancelled_at, created_at } = req.body;
 
-        if (!user_email || !subscription_id || !product_name || !ended_at || !created_at) {
+        if (!user_email || !subscription_id || !product_name || !cancelled_at || !created_at) {
             return res.status(400).json({ error: 'Missing required fields in the request.' });
         }
 
-        const emailContent = getEmailContent(product_name, subscription_id, ended_at, created_at);
+        const emailContent = getEmailContent(product_name, subscription_id, cancelled_at, created_at);
         
 
         await sendEmail(user_email, "Subscription Cancellation", emailContent);
@@ -34,8 +34,8 @@ app.post('/cancel_subscription', async (req, res) => {
     }
 });
 
-function getEmailContent(product_name, subscription_id, ended_at, created_at) {
-    const cancellationTime = new Date(ended_at);
+function getEmailContent(product_name, subscription_id, cancelled_at, created_at) {
+    const cancellationTime = new Date(cancelled_at);
     const creationTime = new Date(created_at);
 
     const differenceInMs = cancellationTime.getTime() - creationTime.getTime();
@@ -43,7 +43,6 @@ function getEmailContent(product_name, subscription_id, ended_at, created_at) {
     console.log(cancellationTime.getTime())
     console.log(creationTime.getTime())
     console.log(differenceInDays)
-    
     if (differenceInDays < 7) {
         return `Dear Customer,\n\nYour subscription for ${product_name} (Subscription ID: ${subscription_id}) has been cancelled within the first seven days of subscription.\n\nIf you have any questions or concerns, please feel free to contact us.\n\nBest regards,\n`;
     } else if (differenceInDays < 30) {
