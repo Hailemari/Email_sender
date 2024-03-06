@@ -37,11 +37,11 @@ function getEmailContent(product_name, subscription_id, cancelled_at) {
     const daysDifference = Math.floor((currentTime - cancellationTime) / (1000 * 60 * 60 * 24));
 
     if (daysDifference < 7) {
-        return `Dear Customer,\n\nYour subscription for ${product_name} (Subscription ID: ${subscription_id}) has been cancelled within the first seven days of subscription.\n\nIf you have any questions or concerns, please feel free to contact us.\n\nBest regards,\nYour Company`;
+        return `Dear Customer,\n\nYour subscription for ${product_name} (Subscription ID: ${subscription_id}) has been cancelled within the first seven days of subscription.\n\nIf you have any questions or concerns, please feel free to contact us.\n\nBest regards,\n`;
     } else if (daysDifference < 30) {
-        return `Dear Customer,\n\nYour subscription for ${product_name} (Subscription ID: ${subscription_id}) has been cancelled between 7 and 30 days of subscription.\n\nIf you have any questions or concerns, please feel free to contact us.\n\nBest regards,\nYour Company`;
+        return `Dear Customer,\n\nYour subscription for ${product_name} (Subscription ID: ${subscription_id}) has been cancelled between 7 and 30 days of subscription.\n\nIf you have any questions or concerns, please feel free to contact us.\n\nBest regards,\n`;
     } else {
-        return `Dear Customer,\n\nYour subscription for ${product_name} (Subscription ID: ${subscription_id}) has been cancelled after 30 days of subscription.\n\nIf you have any questions or concerns, please feel free to contact us.\n\nBest regards,\nYour Company`;
+        return `Dear Customer,\n\nYour subscription for ${product_name} (Subscription ID: ${subscription_id}) has been cancelled after 30 days of subscription.\n\nIf you have any questions or concerns, please feel free to contact us.\n\nBest regards,\n`;
     }
 }
 
