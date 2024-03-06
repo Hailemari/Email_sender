@@ -8,6 +8,9 @@ const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
+app.get('/', (req, res) => {
+    res.send('HELLO WORLD!!!')
+})
 
 app.post('/cancel_subscription', async (req, res) => {
     console.log('new request')
