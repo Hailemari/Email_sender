@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
+const PORT = process.env.PORT || 3000
+
 const app = express();
 
 
@@ -71,3 +73,6 @@ async function sendEmail(receiverEmail, subject, message) {
     }
 }
 
+app.listen(PORT, () => {
+    console.log(`APP LISTENING ON PORT ${PORT}`)
+})
