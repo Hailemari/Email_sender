@@ -42,7 +42,7 @@ function getEmailContent(product_name, subscription_id, cancelled_at, created_at
     const differenceInDays = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
     console.log(cancellationTime.getTime())
     console.log(creationTime.getTime())
-    console.log(daysDifference)
+    console.log(differenceInDays)
     if (differenceInDays < 7) {
         return `Dear Customer,\n\nYour subscription for ${product_name} (Subscription ID: ${subscription_id}) has been cancelled within the first seven days of subscription.\n\nIf you have any questions or concerns, please feel free to contact us.\n\nBest regards,\n`;
     } else if (differenceInDays < 30) {
