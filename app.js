@@ -13,9 +13,11 @@ app.use(bodyParser.json());
 
 app.post('/cancel_subscription', async (req, res) => {
     console.log('new request');
-    console.log(req);
+    console.log(req.body)
+    console.log(req.params)
+    console.log(req.query)
     try {
-        const { user_email, subscription_id, product_name, cancelled_at, created_at } = req.query;
+        const { user_email, subscription_id, product_name, cancelled_at, created_at } = req.params;
 
         if (!user_email || !subscription_id || !product_name || !cancelled_at || !created_at) {
             return res.status(400).json({ error: 'Missing required fields in the request.' });
