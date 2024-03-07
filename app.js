@@ -16,13 +16,13 @@ app.post('/cancel_subscription', async (req, res) => {
     console.log(req.body);
 
     try {
-        const { user_email, subscription_id, product_name, ended_at, created_at } = req.body;
+        const { user_email, subscription_id, product_name, canceled_at, created_at } = req.body;
 
-        if (!user_email || !subscription_id || !product_name || !ended_at || !created_at) {
+        if (!user_email || !subscription_id || !product_name || !canceled_at || !created_at) {
             return res.status(400).json({ error: 'Missing required fields in the request.' });
         }
 
-        const emailContent = getEmailContent(product_name, subscription_id, ended_at, created_at);
+        const emailContent = getEmailContent(product_name, subscription_id, canceled_at, created_at);
         
 
         await sendEmail(user_email, "Subscription Cancellation", emailContent);
@@ -34,8 +34,8 @@ app.post('/cancel_subscription', async (req, res) => {
     }
 });
 
-function getEmailContent(product_name, subscription_id, ended_at, created_at) {
-    const cancellationTime = new Date(ended_at);
+function getEmailContent(product_name, subscription_id, canceled_at, created_at) {
+    const cancellationTime = new Date();
     const creationTime = new Date(created_at);
 
     const differenceInMs = cancellationTime.getTime() - creationTime.getTime();
