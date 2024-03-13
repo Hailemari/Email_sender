@@ -63,7 +63,7 @@ function getEmailContent(product_name, subscription_id, created_at) {
 
     return htmlContent;
 }
-}
+
 
 async function sendEmail(receiverEmail, subject, message) {
     try {
