@@ -25,10 +25,10 @@ app.post('/cancel_subscription', async (req, res) => {
             return res.status(400).json({ error: 'Missing required fields in the request.' });
         }
 
-        const emailContent = getEmailContent(product_name, subscription_id, created_at);
+        const {subject, emailBody } = getEmailContent(product_name, subscription_id, created_at);
         
 
-        await sendEmail(user_email, "Get Support & Claim Refund for your Bulk Mockup subscription?", emailContent);
+        await sendEmail(user_email, subject, emailBody);
         
         res.status(200).json({ message: 'Email sent to customer for subscription cancellation.' });
     } catch (error) {
@@ -44,24 +44,30 @@ function getEmailContent(product_name, subscription_id, created_at) {
     const differenceInMs = cancellationTime.getTime() - creationTime.getTime();
     const differenceInDays = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
 
-    let htmlContent = `<html><body><p>Subscription Cancelled!</p></body></html>`
+    let emailSubject = '';
+    let htmlContent = '';
   
     try {
+        let data = '';
         if (differenceInDays < 7) {
-            let data = fs.readFileSync('message_one.txt', 'utf8');
-            htmlContent = marked(data);
+            data = fs.readFileSync('message_one.txt', 'utf8');
         } else if (differenceInDays < 30) {
-            let data = fs.readFileSync('message_two.txt', 'utf8');
-            htmlContent = marked(data);
+            data = fs.readFileSync('message_two.txt', 'utf8');
         } else {
-            let data = fs.readFileSync('message_three.txt', 'utf8');
-            htmlContent = marked(data); 
+            data = fs.readFileSync('message_three.txt', 'utf8');
         }
+
+        const lines = data.split('\n');
+
+        emailSubject = lines[0].substring(10);
+
+        const body = lines.slice(1).join('\n');
+        htmlContent = marked(body);
     } catch (err) {
         console.error('An error occurred:', err);
     }
 
-    return htmlContent;
+    return { subject: emailSubject, body: htmlContent };
 }
 
 
