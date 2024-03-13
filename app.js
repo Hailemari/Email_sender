@@ -3,6 +3,10 @@ const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
+const fs = require('fs');
+const marked = require('marked');
+
+
 const PORT = process.env.PORT || 3000
 
 const app = express();
@@ -47,59 +51,30 @@ function getEmailContent(product_name, subscription_id, created_at) {
     let htmlContent = `<html><body><p>Subscription Cancelled!</p></body></html>`
   
     if (differenceInDays < 7) {
-        htmlContent = `
-            <html>
-            <body>
-                <p>Hello {{ subscriber.first_name }},</p>
-                <p>I am Vikash, the creator of Bulk Mockup.</p>
-                <p>I noticed that you recently canceled your subscription within the first 7 days. Your satisfaction is our top priority.</p>
-                <p>I'd like to offer our quick support assistance to make sure you get the most out of it.</p>
-                <p>Would you be interested in scheduling a one-on-one support call at a time that suits you best?</p>
-                <p>During this call, I can address any concerns you may have, help you navigate and setup your workflow, and ensure you're getting the value you signed up for.</p>
-                <p><a href="https://cal.com/vikash-bulk-mockup/30min">Book a support call here</a></p>
-                <p>Best Regards</p>
-                <p>Vikash Kr. Prajapati</p>
-                <p>Founder Bulk Mockup</p>
-                <p>P.S. You are protected by our 7-day money-back guarantee. If you'd like to claim your refund, kindly <a href="https://forms.gle/1vKddypt6fTRFNmx6">fill up this form</a>.</p>
-            </body>
-            </html>
-        `;
+        fs.readFile('message_one.txt', 'utf8', (err, data) => {
+            if (err) {
+                console.error('An error occurred:', err);
+                return;
+            }
+            htmlContent = marked(data);
+        })
+        
     } else if (differenceInDays < 30) {
-        htmlContent = `
-            <html>
-            <body>
-                <p>Hello {{ subscriber.first_name }},</p>
-                <p>I am Vikash, the creator of Bulk Mockup.</p>
-                <p>I noticed that you recently canceled your subscription within the first 7 days. Your satisfaction is our top priority.</p>
-                <p>I'd like to offer our quick support assistance to make sure you get the most out of it.</p>
-                <p>Would you be interested in scheduling a one-on-one support call at a time that suits you best?</p>
-                <p>During this call, I can address any concerns you may have, help you navigate and setup your workflow, and ensure you're getting the value you signed up for.</p>
-                <p><a href="https://cal.com/vikash-bulk-mockup/30min">Book a support call here</a></p>
-                <p>Best Regards</p>
-                <p>Vikash Kr. Prajapati</p>
-                <p>Founder Bulk Mockup</p>
-                <p>P.S. You are protected by our 7-day money-back guarantee. If you'd like to claim your refund, kindly <a href="https://forms.gle/1vKddypt6fTRFNmx6">fill up this form</a>.</p>
-            </body>
-            </html>
-        `;
+        fs.readFile('message_two.txt', 'utf8', (err, data) => {
+            if (err) {
+                console.error('An error occured', err);
+                return;
+            }
+            htmlContent = marked(data);
+        })
     } else {
-        htmlContent = `
-            <html>
-            <body>
-                <p>Hello {{ subscriber.first_name }},</p>
-                <p>I am Vikash, the creator of Bulk Mockup.</p>
-                <p>I noticed that you recently canceled your subscription within the first 7 days. Your satisfaction is our top priority.</p>
-                <p>I'd like to offer our quick support assistance to make sure you get the most out of it.</p>
-                <p>Would you be interested in scheduling a one-on-one support call at a time that suits you best?</p>
-                <p>During this call, I can address any concerns you may have, help you navigate and setup your workflow, and ensure you're getting the value you signed up for.</p>
-                <p><a href="https://cal.com/vikash-bulk-mockup/30min">Book a support call here</a></p>
-                <p>Best Regards</p>
-                <p>Vikash Kr. Prajapati</p>
-                <p>Founder Bulk Mockup</p>
-                <p>P.S. You are protected by our 7-day money-back guarantee. If you'd like to claim your refund, kindly <a href="https://forms.gle/1vKddypt6fTRFNmx6">fill up this form</a>.</p>
-            </body>
-            </html>
-        `;
+        fs.readFile('message_three.txt', 'utf8', (err, data) => {
+            if (err) {
+                console.error('An error occured', err);
+                return;
+            }
+            htmlContent = marked(data); 
+        })
     }
 
     return htmlContent;
