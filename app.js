@@ -4,7 +4,7 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 const fs = require('fs');
-import { marked } from 'marked'
+const  { marked } = require('marked');
 
 const PORT = process.env.PORT || 3000
 
