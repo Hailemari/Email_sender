@@ -4,8 +4,7 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 const fs = require('fs');
-const marked = require('marked');
-
+import { marked } from 'marked'
 
 const PORT = process.env.PORT || 3000
 
@@ -44,41 +43,26 @@ function getEmailContent(product_name, subscription_id, created_at) {
 
     const differenceInMs = cancellationTime.getTime() - creationTime.getTime();
     const differenceInDays = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
-    console.log(cancellationTime.getTime());
-    console.log(creationTime.getTime());
-    console.log(differenceInDays);
 
     let htmlContent = `<html><body><p>Subscription Cancelled!</p></body></html>`
   
-    if (differenceInDays < 7) {
-        fs.readFile('message_one.txt', 'utf8', (err, data) => {
-            if (err) {
-                console.error('An error occurred:', err);
-                return;
-            }
+    try {
+        if (differenceInDays < 7) {
+            let data = fs.readFileSync('message_one.txt', 'utf8');
             htmlContent = marked(data);
-        })
-        
-    } else if (differenceInDays < 30) {
-        fs.readFile('message_two.txt', 'utf8', (err, data) => {
-            if (err) {
-                console.error('An error occured', err);
-                return;
-            }
+        } else if (differenceInDays < 30) {
+            let data = fs.readFileSync('message_two.txt', 'utf8');
             htmlContent = marked(data);
-        })
-    } else {
-        fs.readFile('message_three.txt', 'utf8', (err, data) => {
-            if (err) {
-                console.error('An error occured', err);
-                return;
-            }
+        } else {
+            let data = fs.readFileSync('message_three.txt', 'utf8');
             htmlContent = marked(data); 
-        })
+        }
+    } catch (err) {
+        console.error('An error occurred:', err);
     }
 
     return htmlContent;
-
+}
 }
 
 async function sendEmail(receiverEmail, subject, message) {
