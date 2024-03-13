@@ -25,10 +25,10 @@ app.post('/cancel_subscription', async (req, res) => {
             return res.status(400).json({ error: 'Missing required fields in the request.' });
         }
 
-        const {subject, emailBody } = getEmailContent(product_name, subscription_id, created_at);
+        const {subject, body } = getEmailContent(product_name, subscription_id, created_at);
         
 
-        await sendEmail(user_email, subject, emailBody);
+        await sendEmail(user_email, subject, body);
         
         res.status(200).json({ message: 'Email sent to customer for subscription cancellation.' });
     } catch (error) {
