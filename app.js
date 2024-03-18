@@ -76,10 +76,11 @@ async function getEmailContent(product_name, subscription_id, created_at) {
       console.log('Email body:', htmlContent);
       return { subject: emailSubject, body: htmlContent };
       
-    } catch (err) {
-      console.error('An error occurred:', err);
-      throw new Error('Internal server error.');
+    } catch (error) {
+        console.error('Error fetching email content:', error);
+        throw error;
     }
+      
   }
   
   function getDraftId(differenceInDays, drafts) {
