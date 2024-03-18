@@ -3,9 +3,8 @@ const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
-const fs = require('fs').promises;
-const { google } = require('googleapis');
-
+const fs = require('fs');
+const  { marked } = require('marked');
 
 const PORT = process.env.PORT || 3000
 
@@ -38,67 +37,38 @@ app.post('/cancel_subscription', async (req, res) => {
     }
 });
 
-
-
-async function getEmailContent(product_name, subscription_id, created_at) {
+function getEmailContent(product_name, subscription_id, created_at) {
     const cancellationTime = new Date();
     const creationTime = new Date(created_at);
+
     const differenceInMs = cancellationTime.getTime() - creationTime.getTime();
     const differenceInDays = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
+
+    let emailSubject = '';
+    let htmlContent = '';
   
     try {
-      const auth = new google.auth.GoogleAuth({
-        credentials: JSON.parse(await fs.readFile('./Latest.json')),
-        scopes: ['https://www.googleapis.com/auth/gmail.readonly'],
-        subject: 'hailemariamkefale19@gmail.com'
-      });
-  
-      const gmail = google.gmail({ version: 'v1', auth });
-  
-      const drafts = await gmail.users.drafts.list({
-        userId: 'me',
-      });
-  
-      const draftId = getDraftId(differenceInDays, drafts.data.drafts);
-      if (!draftId) {
-        throw new Error('No matching draft found for the given criteria.');
-      }
-  
-      const draft = await gmail.users.drafts.get({
-        userId: 'me',
-        id: draftId,
-      });
-  
-      const decoder = new TextDecoder('utf-8');
-      const emailSubject = draft.data.message.subject;
-      const htmlContent = decoder.decode(Buffer.from(draft.data.message.payload.body.data, 'base64'));
-      
-      console.log('Email subject:', emailSubject);
-      console.log('Email body:', htmlContent);
-      return { subject: emailSubject, body: htmlContent };
-      
-    } catch (error) {
-        console.error('Error fetching email content:', error);
-        throw error;
+        let data = '';
+        if (differenceInDays < 7) {
+            data = fs.readFileSync('message_one.txt', 'utf8');
+        } else if (differenceInDays < 30) {
+            data = fs.readFileSync('message_two.txt', 'utf8');
+        } else {
+            data = fs.readFileSync('message_three.txt', 'utf8');
+        }
+
+        const lines = data.split('\n');
+
+        emailSubject = lines[0].substring(10);
+
+        const body = lines.slice(1).join('\n');
+        htmlContent = marked(body);
+    } catch (err) {
+        console.error('An error occurred:', err);
     }
-      
-  }
-  
-  function getDraftId(differenceInDays, drafts) {
-    // Implement logic to retrieve the appropriate draft ID based on differenceInDays
-    // This could involve storing draft IDs in a database or a configuration file
-    // For simplicity, this example returns the first draft ID that matches the criteria
-    if (differenceInDays < 7) {
-      const match = drafts.find((draft) => draft.message.subject.includes('Draft 1'));
-      return match ? match.id : null;
-    } else if (differenceInDays < 30) {
-      const match = drafts.find((draft) => draft.message.subject.includes('Draft 2'));
-      return match ? match.id : null;
-    } else {
-      const match = drafts.find((draft) => draft.message.subject.includes('Draft 3'));
-      return match ? match.id : null;
-    }
-  }
+
+    return { subject: emailSubject, body: htmlContent };
+}
 
 
 async function sendEmail(receiverEmail, subject, message) {
@@ -127,9 +97,23 @@ async function sendEmail(receiverEmail, subject, message) {
     }
 }
 
-
-
-
 app.listen(PORT, () => {
     console.log(`APP LISTENING ON PORT ${PORT}`)
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
