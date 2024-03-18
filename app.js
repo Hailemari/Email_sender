@@ -48,7 +48,7 @@ async function getEmailContent(product_name, subscription_id, created_at) {
   
     try {
       const auth = new google.auth.GoogleAuth({
-        credentials: JSON.parse(await fs.readFile('./clientInfo.json')),
+        credentials: JSON.parse(await fs.readFile('./Latest.json')),
         scopes: ['https://www.googleapis.com/auth/gmail.readonly'],
         subject: 'hailemariamkefale19@gmail.com'
       });
