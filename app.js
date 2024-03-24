@@ -29,6 +29,7 @@ app.post('/cancel_subscription', async (req, res) => {
     }
     const { subject, body } = getEmailContent(product_name, subscription_id, created_at);
     await sendEmail(user_email, subject, body);
+    console.log('Email sent to customer for subscription cancellation.');
     res.status(200).json({ message: 'Email sent to customer for subscription cancellation.' });
   } catch (error) {
     console.error("Failed to process request:", error);
